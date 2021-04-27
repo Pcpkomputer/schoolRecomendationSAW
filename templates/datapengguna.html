@@ -147,7 +147,7 @@
         </div>
 
         <!-- Modal -->
-        <form class="modal fade" id="tambahpenggunaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form class="modal fade" action="" method="POST" id="tambahpenggunaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -156,22 +156,23 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body" action="" method="POST">
+              <div class="modal-body">
+                <input type="hidden" name="_method" value="POST" />
                 <div class="form-group">
                   <label for="exampleFormControlInput1">Nama</label>
-                  <input required type="text" class="form-control" id="exampleFormControlInput1" placeholder="Nama">
+                  <input required type="text" name="nama" class="form-control" id="exampleFormControlInput1" placeholder="Nama">
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlInput1">Email</label>
-                  <input required type="email" class="form-control" id="exampleFormControlInput1" placeholder="nama@mail.com">
+                  <input required type="email" name="email" class="form-control" id="exampleFormControlInput1" placeholder="nama@mail.com">
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlInput1">Password</label>
-                  <input required type="password" class="form-control" id="exampleFormControlInput1" placeholder="password">
+                  <input required type="password" name="password" class="form-control" id="exampleFormControlInput1" placeholder="password">
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlSelect1">Role</label>
-                  <select required class="form-control" id="exampleFormControlSelect1">
+                  <select required class="form-control" name="role" id="exampleFormControlSelect1">
                     <option>admin</option>
                     <option>user</option>
                   </select>
@@ -186,7 +187,7 @@
         </form>
 
          <!-- Modal -->
-         <form class="modal fade" id="ubahpenggunaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <form class="modal fade" action="" method="POST" id="ubahpenggunaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -195,28 +196,29 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body" action="" method="POST">
+              <div class="modal-body">
+                <input type="hidden" name="_method" value="PUT" />
                 <div class="form-group">
                   <label for="exampleFormControlInput1">ID Pengguna</label>
-                  <input required type="text" class="form-control" id="exampleFormControlInput1" readonly placeholder="ID Pengguna">
+                  <input required type="text" name="id" id="readonlyDataPengguna" class="form-control" readonly placeholder="ID Pengguna">
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlInput1">Nama</label>
-                  <input required type="text" class="form-control" id="exampleFormControlInput1" placeholder="Nama">
+                  <input required type="text" name="nama" id="putNama" class="form-control" placeholder="Nama">
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlInput1">Email</label>
-                  <input required type="email" class="form-control" id="exampleFormControlInput1" placeholder="nama@mail.com">
+                  <input required type="email" name="email" id="putEmail" class="form-control" placeholder="nama@mail.com">
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlInput1">Password</label>
-                  <input required type="password" class="form-control" id="exampleFormControlInput1" placeholder="password">
+                  <input required type="password" name="password" id="putPassword" class="form-control" placeholder="password">
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlSelect1">Role</label>
-                  <select required class="form-control" id="exampleFormControlSelect1">
-                    <option>admin</option>
-                    <option>user</option>
+                  <select required class="form-control" name="role" id="putRole">
+                    <option value="admin">admin</option>
+                    <option value="user">user</option>
                   </select>
                 </div>
               </div>
@@ -253,6 +255,9 @@
   <script src="static/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
   <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
   <script>
+
+    let data = {{ data | safe}}
+
     $('#table').bootstrapTable({
       search:true,
       pagination:true,
@@ -280,24 +285,38 @@
     title: 'Aksi',
     formatter:(_,value, i)=>{
         return `
-        <button id="btnUbahPengguna" type="button" class="btn btn-primary">Ubah</button>
-        <button type="button" class="btn btn-danger">Hapus</button>`
+        <div style="flex-direction:row;display:flex">
+        <form>
+        <button id="btnUbahPengguna" data-index="${i}" data-id="${value.id}" type="button" class="btn btn-primary">Ubah</button>
+        </form>
+        <form action="" method="POST">
+        <input type="hidden" name="_method" value="DELETE" /> 
+        <input type="hidden" name="id" value="${value.id}" /> 
+        <button type="submit" class="btn btn-danger">Hapus</button>
+        </form>
+        </div>`
     }
   }],
-  data: [{
-    id: 1,
-    name: 'Item 1',
-    price: '$1'
-  }, {
-    id: 2,
-    name: 'Item 2',
-    price: '$2'
-  }]
+  data: data
 })
   </script>
   <script>
-      $(document).on("click","#btnUbahPengguna",()=>{
+      $(document).on("click","#btnUbahPengguna",(e)=>{
          $("#ubahpenggunaModal").modal();
+
+        let id = data[e.currentTarget.getAttribute("data-index")].id;
+        let nama = data[e.currentTarget.getAttribute("data-index")].nama;
+        let email = data[e.currentTarget.getAttribute("data-index")].email;
+        let password = data[e.currentTarget.getAttribute("data-index")].password;
+        let role = data[e.currentTarget.getAttribute("data-index")].role;
+
+         document.querySelector("#readonlyDataPengguna").value=e.currentTarget.getAttribute("data-id");
+         
+         document.querySelector("#putNama").value = nama;
+         document.querySelector("#putemail").value = email;
+         document.querySelector("#putPassword").value = password;
+         document.querySelector("#putRole").value = role;
+         
       })
   </script>
   <!-- End plugin js for this page-->
