@@ -16,7 +16,7 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
-@app.route("/datapengguna",  methods=["POST","GET","PUT","DELETE"])
+@app.route("/datapengguna",  methods=["POST","GET"])
 def datapengguna():
     if request.method=="POST" and request.form["_method"]=="POST":
         nama = request.form["nama"]
@@ -56,7 +56,7 @@ def datapengguna():
         return render_template("datapengguna.html", data=json.dumps(payload))
 
 
-@app.route("/datakriteria", methods=["POST","GET","PUT","DELETE"])
+@app.route("/datakriteria", methods=["POST","GET"])
 def datakriteria():
     if request.method=="POST" and request.form["_method"]=="POST":
         return 'post'
@@ -83,11 +83,79 @@ def datakriteria():
             })
 
         return render_template("datakriteria.html", data=json.dumps(payload))
-    return render_template("datakriteria.html")
 
-@app.route("/datarule", methods=["POST","GET","PUT","DELETE"])
+
+@app.route("/datasekolah", methods=["POST","GET"])
+def datasekolah():
+    if request.method=="POST" and request.form["_method"]=="POST":
+        return str(request.form["json"])
+    elif request.method=="POST" and request.form["_method"]=="PUT":
+        return "put"
+    elif request.method=="POST" and request.form["_method"]=="DELETE":
+        return 'delete'
+    elif request.method=="GET":
+        mydb.connect()
+        cursor = mydb.cursor()
+        
+        cursor.execute("SELECT * FROM kriteria")
+        kriteria = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM sekolah")
+        sekolah = cursor.fetchall()
+
+        cursor.close()
+        mydb.close()
+
+
+        columns = []
+        for x in kriteria:
+            columns.append({
+                "field":x[1],
+                "title":x[1]
+            })
+
+        school = []
+        for j in sekolah:
+            school.append(json.loads(j[1]))
+    
+
+        return render_template("datasekolah.html",kriteria=kriteria,columns=json.dumps(columns),data=json.dumps(school))
+
+@app.route("/datarule", methods=["POST","GET"])
 def datarule():
-    return render_template("datarule.html")
+    if request.method=="POST" and request.form["_method"]=="POST":
+        return 'post'
+    elif request.method=="POST" and request.form["_method"]=="PUT":
+        return "put"
+    elif request.method=="POST" and request.form["_method"]=="DELETE":
+        return 'delete'
+    elif request.method=="GET":
+        mydb.connect()
+        cursor = mydb.cursor()
+        
+        cursor.execute("SELECT rule.*, kriteria.nama_kriteria FROM rule INNER JOIN kriteria ON rule.id_kriteria=kriteria.id_kriteria")
+        row = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM kriteria")
+        kriteria = cursor.fetchall()
+
+        cursor.close()
+        mydb.close()
+
+        payload = [];
+
+        for x in row:
+            payload.append({
+                "id_rule":x[0],
+                "id_kriteria":x[1],
+                "nama_kriteria":x[4],
+                "rule":x[2],
+                "nilai":x[3],
+            })
+        
+
+        return render_template("datarule.html", data=json.dumps(payload), kriteria=kriteria)
+
 
 if __name__=='__main__':
     app.run(debug=True)

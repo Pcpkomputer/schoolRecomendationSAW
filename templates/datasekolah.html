@@ -9,6 +9,7 @@
   <!-- endinject -->
   <!-- plugin css for this page -->
   <link rel="stylesheet" href="static/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="static/css/style.css">
@@ -59,7 +60,7 @@
       <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="/">
               <i class="mdi mdi-home menu-icon"></i>
               <span class="menu-title">Dashboard</span>
@@ -73,12 +74,14 @@
             </a>
           </li>
           
-       <li class="nav-item">
+       <li class="nav-item active">
             <a class="nav-link" href="datasekolah">
               <i class="mdi mdi-file-document-box-outline menu-icon"></i>
               <span class="menu-title">Data Sekolah</span>
             </a>
 
+
+        
 
           </li><li class="nav-item">
             <a class="nav-link" href="datakriteria">
@@ -86,7 +89,6 @@
               <span class="menu-title">Data Kriteria</span>
             </a>
           </li>
-
 
         </li><li class="nav-item">
           <a class="nav-link" href="datarule">
@@ -113,8 +115,8 @@
               <div class="d-flex justify-content-between flex-wrap">
                 <div class="d-flex align-items-end flex-wrap">
                   <div class="mr-md-3 mr-xl-5">
-                    <h2>Selamat datang,</h2>
-                    <p class="mb-md-0">berikut adalah statistik dari program rekomendasi sekolah SAW.</p>
+                    <h2>Data Sekolah,</h2>
+                    <p class="mb-md-0">berikut adalah data sekolah dalam program rekomendasi sekolah SAW.</p>
                   </div>
                   
                 </div>
@@ -126,29 +128,91 @@
             
           </div>
           <div class="row">
-            <div class="col-md-4 grid-margin stretch-card">
+            <div class="col-md-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body dashboard-tabs p-3">
-                  
-             asdasdasdas     
+                  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#tambahsekolahModal">
+                    Tambah Sekolah
+                  </button>                  
+                  <table id="table"></table>
                 </div>
               </div>
             </div>
     
-     <div class="col-md-4 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body dashboard-tabs p-3">
-                  
-             asdasdasdas     
-                </div>
-              </div>
-            </div>
     
     
           </div>
           
           
         </div>
+
+        <!-- Modal -->
+        <form class="modal fade" action="" method="POST" id="tambahsekolahModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Sekolah</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" name="_method" value="POST" />
+                <input type="hidden" id="jsonPostForms" name="json" value="" />
+                <div class="form-group">
+                  <label for="exampleFormControlInput1">Nama Sekolah</label>
+                  <input required type="text" data-identifier="Nama Sekolah" name="Nama Sekolah" class="form-control" id="postForms" placeholder="Nama Sekolah">
+              </div>
+                {%for x in kriteria%}
+                  <div class="form-group">
+                      <label for="exampleFormControlInput1">{{x[1]}}</label>
+                      <input required data-identifier="{{x[1]}}" type="text" name="{{x[1]}}" class="form-control" id="postForms" placeholder="{{x[1]}}">
+                  </div>
+                {%endfor%}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="submit" id="btnSimpan" class="btn btn-primary">Simpan</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+         <!-- Modal -->
+         <form class="modal fade" action="" method="POST" id="ubahsekolahModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ubah Sekolah</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" name="_method" value="PUT" />
+                <div class="form-group">
+                  <label for="exampleFormControlInput1">ID Sekolah</label>
+                  <input required type="text" readonly data-identifier="ID Sekolah" name="id" class="form-control" id="putForms" placeholder="ID Sekolah">
+                </div>
+                <div class="form-group">
+                  <label for="exampleFormControlInput1">Nama Sekolah</label>
+                  <input required type="text" name="nama" data-identifier="Nama Sekolah" class="form-control"  id="putForms" placeholder="Nama Sekolah">
+                </div>
+                  {%for x in kriteria%}
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">{{x[1]}}</label>
+                        <input required type="text" data-identifier="{{x[1]}}" name="nama" class="form-control" id="putForms" placeholder="{{x[1]}}">
+                    </div>
+                  {%endfor%}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary">Ubah</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
@@ -172,6 +236,74 @@
   <script src="static/vendors/chart.js/Chart.min.js"></script>
   <script src="static/vendors/datatables.net/jquery.dataTables.js"></script>
   <script src="static/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+  <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+  <script>
+    let uniqueId = ()=>Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+    let data = {{ data | safe}};
+
+
+    let actualcolumns = [
+      {
+        field:"Nama Sekolah",
+        title:"Nama Sekolah"
+      }
+    ]
+
+    let columns = {{columns| safe}};
+
+    actualcolumns = [...actualcolumns,...columns]
+
+    actualcolumns.push( {
+    field: 'aksi',
+    title: 'Aksi',
+    formatter:(_,value, i)=>{
+        return `
+        <div style="flex-direction:row;display:flex">
+        <form>
+        <button id="btnUbahPengguna" data-index="${i}" data-id="${value.id}" type="button" class="btn btn-primary">Ubah</button>
+        </form>
+        <form action="" method="POST">
+        <input type="hidden" name="_method" value="DELETE" /> 
+        <input type="hidden" name="id" value="${value.id}" /> 
+        <button type="submit" class="btn btn-danger">Hapus</button>
+        </form>
+        </div>`
+    }
+  });
+
+    $('#table').bootstrapTable({
+      search:true,
+      pagination:true,
+      height:500,
+  columns: actualcolumns,
+  data: data
+})
+  </script>
+  <script>
+      $(document).on("click","#btnUbahPengguna",(e)=>{
+         $("#ubahsekolahModal").modal();
+
+        let index = e.currentTarget.getAttribute("data-index");
+
+
+         document.querySelectorAll("#putForms").forEach((el)=>{
+            let identifier = el.getAttribute("data-identifier");
+            el.value = data[index][identifier];
+         })
+         
+      })
+
+      $(document).on("click","#btnSimpan",(e)=>{
+        let payload = {};
+        document.querySelectorAll("#postForms").forEach((el)=>{
+            let identifier = el.getAttribute("data-identifier");
+            payload[identifier] = el.value;
+         })
+         document.querySelector("#jsonPostForms").value=JSON.stringify(payload);
+
+      })
+  </script>
   <!-- End plugin js for this page-->
   <!-- inject:js -->
   <script src="static/js/off-canvas.js"></script>
