@@ -74,15 +74,11 @@
             </a>
           </li>
           
-       <li class="nav-item active">
+       <li class="nav-item">
             <a class="nav-link" href="datasekolah">
               <i class="mdi mdi-file-document-box-outline menu-icon"></i>
               <span class="menu-title">Data Sekolah</span>
             </a>
-
-
-        
-
           </li><li class="nav-item">
             <a class="nav-link" href="datakriteria">
               <i class="mdi mdi-grid-large menu-icon"></i>
@@ -115,8 +111,8 @@
               <div class="d-flex justify-content-between flex-wrap">
                 <div class="d-flex align-items-end flex-wrap">
                   <div class="mr-md-3 mr-xl-5">
-                    <h2>Data Sekolah,</h2>
-                    <p class="mb-md-0">berikut adalah data sekolah dalam program rekomendasi sekolah SAW.</p>
+                    <h2>Perangkingan,</h2>
+                    <p class="mb-md-0">berikut adalah fitur proses perangkingan dengan metode SAW.</p>
                   </div>
                   
                 </div>
@@ -131,10 +127,11 @@
             <div class="col-md-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body dashboard-tabs p-3">
-                  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#tambahsekolahModal">
-                    Tambah Sekolah
-                  </button>                  
-                  <table id="table"></table>
+                    <form method="POST" action="">
+                      <button type="submit" class="btn btn-secondary">
+                        Proses Perangkingan
+                      </button>   
+                    </form> 
                 </div>
               </div>
             </div>
@@ -146,72 +143,80 @@
           
         </div>
 
-        <!-- Modal -->
-        <form class="modal fade" action="" method="POST" id="tambahsekolahModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Sekolah</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <input type="hidden" name="_method" value="POST" />
-                <input type="hidden" id="jsonPostForms" name="json" value="" />
-                <div class="form-group">
-                  <label for="exampleFormControlInput1">Nama Sekolah</label>
-                  <input required type="text" data-identifier="Nama Sekolah" name="Nama Sekolah" class="form-control" id="postForms" placeholder="Nama Sekolah">
-              </div>
-                {%for x in kriteria%}
+           <!-- Modal -->
+           <form class="modal fade" action="" method="POST" id="tambahruleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Tambah Rule</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" action="" method="POST">
+                  <input type="hidden" name="_method" value="POST" /> 
                   <div class="form-group">
-                      <label for="exampleFormControlInput1">{{x[1]}}</label>
-                      <input required data-identifier="{{x[1]}}" type="text" name="{{x[1]}}" class="form-control" id="postForms" placeholder="{{x[1]}}">
+                    <label for="exampleFormControlSelect1">Kriteria</label>
+                    <select required name="id" class="form-control" id="exampleFormControlSelect1">
+                      {%for x in kriteria%}
+                         <option value="{{x[0]}}">{{x[1]}}</option>
+                      {%endfor%}
+                    </select>
                   </div>
-                {%endfor%}
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                <button type="submit" id="btnSimpan" class="btn btn-primary">Simpan</button>
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Rule</label>
+                    <input required name="rule" type="text" class="form-control" id="exampleFormControlInput1" placeholder="rule">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlInput1">Nilai</label>
+                    <input required name="nilai" type="number" class="form-control" id="exampleFormControlInput1" placeholder="nilai">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                  <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+  
+           <!-- Modal -->
+           <form class="modal fade" action=""  method="POST" id="ubahruleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Ubah Rule</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" action="" method="PUT">
+                  <input type="hidden" name="_method" value="PUT" /> 
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">ID Rule</label>
+                    <input required type="text" name="id" readonly class="form-control" id="readonlyDataRule" placeholder="ID Rule">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Kriteria</label>
+                    <input required type="text" name="nama" readonly class="form-control" id="putNamaKriteria" placeholder="Nama Kriteria">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Rule</label>
+                    <input required type="text" name="rule" class="form-control" id="putRule" placeholder="rule">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlInput1">Nilai</label>
+                    <input required type="number" name="nilai" class="form-control" id="putNilai" placeholder="nilai">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                  <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+              </div>
+            </div>
+          </form>
 
-         <!-- Modal -->
-         <form class="modal fade" action="" method="POST" id="ubahsekolahModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ubah Sekolah</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <input type="hidden" name="_method" value="PUT" />
-                <div class="form-group">
-                  <label for="exampleFormControlInput1">ID Sekolah</label>
-                  <input required type="text" readonly data-identifier="ID Sekolah" name="id" class="form-control" id="putForms" placeholder="ID Sekolah">
-                </div>
-                <div class="form-group">
-                  <label for="exampleFormControlInput1">Nama Sekolah</label>
-                  <input required type="text" name="nama" data-identifier="Nama Sekolah" class="form-control"  id="putForms" placeholder="Nama Sekolah">
-                </div>
-                  {%for x in kriteria%}
-                    <div class="form-group">
-                        <label for="exampleFormControlInput1">{{x[1]}}</label>
-                        <input required type="text" data-identifier="{{x[1]}}" name="nama" class="form-control" id="putForms" placeholder="{{x[1]}}">
-                    </div>
-                  {%endfor%}
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary">Ubah</button>
-              </div>
-            </div>
-          </div>
-        </form>
 
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
@@ -238,73 +243,99 @@
   <script src="static/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
   <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
   <script>
-    let uniqueId = ()=>Date.now().toString(36) + Math.random().toString(36).substring(2);
 
-    let data = {{ data | safe}};
+  let kriteria = {{kriteria | safe}}
+  let sekolah = {{sekolah | safe}}
+  let rule = {{rule|safe}}
 
+  // PROSES KONVERSI KE DALAM SATUAN RULE
+  let converted = [];
+  kriteria.forEach((element)=>{
+      let key = element[1];
+      sekolah.forEach((itemsekolah,index)=>{
+            converted.push(itemsekolah);
+            let isruleExist = rule.filter((itemrule)=>{return itemrule[4]===key});
+            let truevalue = 0;
+            if(isruleExist.length>0){
+               isruleExist.forEach((itemrule)=>{
+                    let usedRule = itemrule[2];
+                    if(eval(`${itemsekolah[key]}${usedRule}`)){
+                        truevalue = itemrule[3];
+                    }
+               })
+            }
+            else{
+              truevalue=0;
+            }
+            converted[index][key]=truevalue;
+      })
+  })
+  console.log(converted.filter((el,index)=>index<sekolah.length));
 
-    let actualcolumns = [
-      {
-        field:"Nama Sekolah",
-        title:"Nama Sekolah"
-      }
-    ]
-
-    let columns = {{columns| safe}};
-
-    actualcolumns = [...actualcolumns,...columns]
-
-    actualcolumns.push( {
-    field: 'aksi',
-    title: 'Aksi',
-    formatter:(_,value, i)=>{
-        console.log(value)
-        return `
-        <div style="flex-direction:row;display:flex">
-        <form>
-        <button id="btnUbahPengguna" data-index="${i}" data-id="${value.id}" type="button" class="btn btn-primary">Ubah</button>
-        </form>
-        <form action="" method="POST">
-        <input type="hidden" name="_method" value="DELETE" /> 
-        <input type="hidden" name="id" value="${value["ID Sekolah"]}" /> 
-        <button type="submit" class="btn btn-danger">Hapus</button>
-        </form>
-        </div>`
-    }
-  });
-
-    $('#table').bootstrapTable({
-      search:true,
-      pagination:true,
-      height:500,
-  columns: actualcolumns,
-  data: data
-})
+//     let data = {{data|safe}}
+//     $('#table').bootstrapTable({
+//       search:true,
+//       pagination:true,
+//       height:500,
+//   columns: [{
+//     field: 'id_rule',
+//     title: 'ID Rule'
+//   }, {
+//     field: 'id_kriteria',
+//     title: 'ID Kriteria'
+//   }, {
+//     field: 'nama_kriteria',
+//     title: 'Nama Kriteria'
+//   },
+//   {
+//     field: 'rule',
+//     title: 'Rule'
+//   },
+//   {
+//     field: 'nilai',
+//     title: 'Nilai'
+//   },
+//   {
+//     field: 'aksi',
+//     title: 'Aksi',
+//     formatter:(_,value, i)=>{
+//         return `
+//         <div style="flex-direction:row;display:flex">
+//           <form>
+//             <button id="btnUbahRule" data-id="${value.id_rule}" data-index="${i}" type="button" class="btn btn-primary">Ubah</button>
+//           </form>
+//           <form action="" method="POST">
+//             <input type="hidden" name="_method" value="DELETE" /> 
+//             <input type="hidden" name="id" value="${value.id_rule}" /> 
+//             <button type="submit" class="btn btn-danger">Hapus</button>
+//           </form>
+//         </div>  
+//         `
+        
+//     }
+//   }],
+//   data: data
+// })
   </script>
-  <script>
-      $(document).on("click","#btnUbahPengguna",(e)=>{
-         $("#ubahsekolahModal").modal();
+   <script>
+    // $(document).on("click","#btnUbahRule",(e)=>{
+    //   $("#ubahruleModal").modal();
 
-        let index = e.currentTarget.getAttribute("data-index");
+    //   let id_rule = data[e.currentTarget.getAttribute("data-index")].id_rule;
+    //   let id_kriteria = data[e.currentTarget.getAttribute("data-index")].id_kriteria;
+    //   let nama_kriteria = data[e.currentTarget.getAttribute("data-index")].nama_kriteria;
+    //   let rule = data[e.currentTarget.getAttribute("data-index")].rule;
+    //   let nilai = data[e.currentTarget.getAttribute("data-index")].nilai;
 
-
-         document.querySelectorAll("#putForms").forEach((el)=>{
-            let identifier = el.getAttribute("data-identifier");
-            el.value = data[index][identifier];
-         })
+    //   document.querySelector("#readonlyDataRule").value=e.currentTarget.getAttribute("data-id");
+      
+    //   document.querySelector("#putNamaKriteria").value = nama_kriteria;
+    //   document.querySelector("#putRule").value = rule;
+    //   document.querySelector("#putNilai").value = nilai;
+   
          
-      })
-
-      $(document).on("click","#btnSimpan",(e)=>{
-        let payload = {};
-        document.querySelectorAll("#postForms").forEach((el)=>{
-            let identifier = el.getAttribute("data-identifier");
-            payload[identifier] = el.value;
-         })
-         document.querySelector("#jsonPostForms").value=JSON.stringify(payload);
-
-      })
-  </script>
+    // })
+</script>
   <!-- End plugin js for this page-->
   <!-- inject:js -->
   <script src="static/js/off-canvas.js"></script>
