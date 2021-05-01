@@ -161,8 +161,6 @@ def datapengguna():
 @app.route("/datakriteria", methods=["POST","GET"])
 def datakriteria():
     if 'role' in session:
-        if session["role"]=="user":
-            return "cih user"
         if request.method=="POST" and request.form["_method"]=="POST":
             name = request.form["nama"]
             tipe = request.form["tipe"]
@@ -220,7 +218,7 @@ def datakriteria():
                     "bobot":x[3],
                 })
 
-            return render_template("datakriteria.html",nama=session["nama"], data=json.dumps(payload))
+            return render_template("datakriteria.html",nama=session["nama"], role=session["role"], data=json.dumps(payload))
     else:
         return redirect(url_for("login"))
 

@@ -58,6 +58,7 @@
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
       <!-- partial:partials/_sidebar.html -->
+      {%if role=="admin"%}
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
@@ -79,12 +80,15 @@
               <i class="mdi mdi-file-document-box-outline menu-icon"></i>
               <span class="menu-title">Data Sekolah</span>
             </a>
+
+
           </li><li class="nav-item active">
             <a class="nav-link" href="datakriteria">
               <i class="mdi mdi-grid-large menu-icon"></i>
               <span class="menu-title">Data Kriteria</span>
             </a>
           </li>
+
 
         </li><li class="nav-item">
           <a class="nav-link" href="datarule">
@@ -102,6 +106,44 @@
        
         </ul>
       </nav>
+      {%elif role=="user"%}
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="mdi mdi-home menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+
+          
+       <li class="nav-item">
+            <a class="nav-link" href="datasekolah">
+              <i class="mdi mdi-file-document-box-outline menu-icon"></i>
+              <span class="menu-title">Data Sekolah</span>
+            </a>
+
+       </li>
+
+       
+      </li><li class="nav-item active">
+        <a class="nav-link" href="datakriteria">
+          <i class="mdi mdi-grid-large menu-icon"></i>
+          <span class="menu-title">Data Kriteria</span>
+        </a>
+      </li>
+
+
+             <li class="nav-item">
+            <a class="nav-link" href="perangkingan">
+              <i class="mdi mdi-chart-timeline menu-icon"></i>
+              <span class="menu-title">Perangkingan</span>
+            </a>
+          </li>
+       
+        </ul>
+      </nav>
+      {%endif%}
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
