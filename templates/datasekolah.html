@@ -39,11 +39,11 @@
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown" aria-expanded="false">
               
-              <span class="nav-profile-name">Admin</span>
+              <span class="nav-profile-name">{{nama}}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
               
-              <a class="dropdown-item">
+              <a  href="logout" class="dropdown-item">
                 <i class="mdi mdi-logout text-primary"></i>
                 Logout
               </a>
@@ -57,56 +57,85 @@
     </nav>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-      <!-- partial:partials/_sidebar.html -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link" href="/">
-              <i class="mdi mdi-home menu-icon"></i>
-              <span class="menu-title">Dashboard</span>
-            </a>
-          </li>
-    
-      <li class="nav-item">
-            <a class="nav-link" href="datapengguna">
-              <i class="mdi mdi-account menu-icon"></i>
-              <span class="menu-title">Data Pengguna</span>
-            </a>
-          </li>
-          
-       <li class="nav-item active">
-            <a class="nav-link" href="datasekolah">
-              <i class="mdi mdi-file-document-box-outline menu-icon"></i>
-              <span class="menu-title">Data Sekolah</span>
-            </a>
-
-
+          <!-- partial:partials/_sidebar.html -->
+          {%if role=="admin"%}
+          <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/">
+                  <i class="mdi mdi-home menu-icon"></i>
+                  <span class="menu-title">Dashboard</span>
+                </a>
+              </li>
         
-
-          </li><li class="nav-item">
-            <a class="nav-link" href="datakriteria">
-              <i class="mdi mdi-grid-large menu-icon"></i>
-              <span class="menu-title">Data Kriteria</span>
-            </a>
-          </li>
-
-        </li><li class="nav-item">
-          <a class="nav-link" href="datarule">
-            <i class="mdi mdi-help-network menu-icon"></i>
-            <span class="menu-title">Data Rule</span>
-          </a>
-        </li>
-
-             <li class="nav-item">
-            <a class="nav-link" href="perangkingan">
-              <i class="mdi mdi-chart-timeline menu-icon"></i>
-              <span class="menu-title">Perangkingan</span>
-            </a>
-          </li>
-       
-        </ul>
-      </nav>
-      <!-- partial -->
+          <li class="nav-item">
+                <a class="nav-link" href="datapengguna">
+                  <i class="mdi mdi-account menu-icon"></i>
+                  <span class="menu-title">Data Pengguna</span>
+                </a>
+              </li>
+              
+           <li class="nav-item active">
+                <a class="nav-link" href="datasekolah">
+                  <i class="mdi mdi-file-document-box-outline menu-icon"></i>
+                  <span class="menu-title">Data Sekolah</span>
+                </a>
+    
+    
+              </li><li class="nav-item">
+                <a class="nav-link" href="datakriteria">
+                  <i class="mdi mdi-grid-large menu-icon"></i>
+                  <span class="menu-title">Data Kriteria</span>
+                </a>
+              </li>
+    
+    
+            </li><li class="nav-item">
+              <a class="nav-link" href="datarule">
+                <i class="mdi mdi-help-network menu-icon"></i>
+                <span class="menu-title">Data Rule</span>
+              </a>
+            </li>
+    
+                 <li class="nav-item">
+                <a class="nav-link" href="perangkingan">
+                  <i class="mdi mdi-chart-timeline menu-icon"></i>
+                  <span class="menu-title">Perangkingan</span>
+                </a>
+              </li>
+           
+            </ul>
+          </nav>
+          {%elif role=="user"%}
+          <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/">
+                  <i class="mdi mdi-home menu-icon"></i>
+                  <span class="menu-title">Dashboard</span>
+                </a>
+              </li>
+    
+              
+           <li class="nav-item">
+                <a class="nav-link active" href="datasekolah">
+                  <i class="mdi mdi-file-document-box-outline menu-icon"></i>
+                  <span class="menu-title">Data Sekolah</span>
+                </a>
+    
+    
+    
+                 <li class="nav-item">
+                <a class="nav-link" href="perangkingan">
+                  <i class="mdi mdi-chart-timeline menu-icon"></i>
+                  <span class="menu-title">Perangkingan</span>
+                </a>
+              </li>
+           
+            </ul>
+          </nav>
+          {%endif%}
+          <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
           
@@ -131,9 +160,11 @@
             <div class="col-md-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body dashboard-tabs p-3">
-                  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#tambahsekolahModal">
-                    Tambah Sekolah
-                  </button>                  
+                  {%if role=="admin"%}
+                      <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#tambahsekolahModal">
+                        Tambah Sekolah
+                      </button>      
+                  {%endif%}            
                   <table id="table"></table>
                 </div>
               </div>
@@ -190,6 +221,7 @@
               </div>
               <div class="modal-body">
                 <input type="hidden" name="_method" value="PUT" />
+                <input id="jsonPutForms" type="hidden" name="json" value="" />
                 <div class="form-group">
                   <label for="exampleFormControlInput1">ID Sekolah</label>
                   <input required type="text" readonly data-identifier="ID Sekolah" name="id" class="form-control" id="putForms" placeholder="ID Sekolah">
@@ -207,7 +239,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary">Ubah</button>
+                <button id="btnUbah" type="button" class="btn btn-primary">Ubah</button>
               </div>
             </div>
           </div>
@@ -254,24 +286,26 @@
 
     actualcolumns = [...actualcolumns,...columns]
 
-    actualcolumns.push( {
-    field: 'aksi',
-    title: 'Aksi',
-    formatter:(_,value, i)=>{
-        console.log(value)
-        return `
-        <div style="flex-direction:row;display:flex">
-        <form>
-        <button id="btnUbahPengguna" data-index="${i}" data-id="${value.id}" type="button" class="btn btn-primary">Ubah</button>
-        </form>
-        <form action="" method="POST">
-        <input type="hidden" name="_method" value="DELETE" /> 
-        <input type="hidden" name="id" value="${value["ID Sekolah"]}" /> 
-        <button type="submit" class="btn btn-danger">Hapus</button>
-        </form>
-        </div>`
-    }
-  });
+    {%if role=="admin"%}
+      actualcolumns.push( {
+      field: 'aksi',
+      title: 'Aksi',
+      formatter:(_,value, i)=>{
+          console.log(value)
+          return `
+          <div style="flex-direction:row;display:flex">
+          <form>
+          <button id="btnUbahPengguna" data-index="${i}" data-id="${value.id}" type="button" class="btn btn-primary">Ubah</button>
+          </form>
+          <form action="" method="POST">
+          <input type="hidden" name="_method" value="DELETE" /> 
+          <input type="hidden" name="id" value="${value["ID Sekolah"]}" /> 
+          <button type="submit" class="btn btn-danger">Hapus</button>
+          </form>
+          </div>`
+      }
+    });
+  {%endif%}
 
     $('#table').bootstrapTable({
       search:true,
@@ -302,6 +336,18 @@
             payload[identifier] = el.value;
          })
          document.querySelector("#jsonPostForms").value=JSON.stringify(payload);
+
+      })
+
+      $(document).on("click","#btnUbah",(e)=>{
+        let payload = {};
+        document.querySelectorAll("#putForms").forEach((el)=>{
+            let identifier = el.getAttribute("data-identifier");
+            payload[identifier] = el.value;
+         })
+         delete payload["ID Sekolah"];
+         document.querySelector("#jsonPutForms").value=JSON.stringify(payload);
+         document.querySelector("#ubahSekolahModal").submit();
 
       })
   </script>

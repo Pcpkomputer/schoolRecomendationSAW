@@ -10,6 +10,7 @@
   <!-- plugin css for this page -->
   <link rel="stylesheet" href="static/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
   <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+  
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="static/css/style.css">
@@ -39,11 +40,11 @@
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown" aria-expanded="false">
               
-              <span class="nav-profile-name">Admin</span>
+              <span class="nav-profile-name">{{nama}}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
               
-              <a class="dropdown-item">
+              <a  href="logout" class="dropdown-item">
                 <i class="mdi mdi-logout text-primary"></i>
                 Logout
               </a>
@@ -57,52 +58,85 @@
     </nav>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-      <!-- partial:partials/_sidebar.html -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link" href="/">
-              <i class="mdi mdi-home menu-icon"></i>
-              <span class="menu-title">Dashboard</span>
-            </a>
-          </li>
-    
-      <li class="nav-item">
-            <a class="nav-link" href="datapengguna">
-              <i class="mdi mdi-account menu-icon"></i>
-              <span class="menu-title">Data Pengguna</span>
-            </a>
-          </li>
-          
+       <!-- partial:partials/_sidebar.html -->
+       {%if role=="admin"%}
+       <nav class="sidebar sidebar-offcanvas" id="sidebar">
+         <ul class="nav">
+           <li class="nav-item">
+             <a class="nav-link" href="/">
+               <i class="mdi mdi-home menu-icon"></i>
+               <span class="menu-title">Dashboard</span>
+             </a>
+           </li>
+     
        <li class="nav-item">
-            <a class="nav-link" href="datasekolah">
-              <i class="mdi mdi-file-document-box-outline menu-icon"></i>
-              <span class="menu-title">Data Sekolah</span>
-            </a>
-          </li><li class="nav-item">
-            <a class="nav-link" href="datakriteria">
-              <i class="mdi mdi-grid-large menu-icon"></i>
-              <span class="menu-title">Data Kriteria</span>
-            </a>
-          </li>
-
-        </li><li class="nav-item">
-          <a class="nav-link" href="datarule">
-            <i class="mdi mdi-help-network menu-icon"></i>
-            <span class="menu-title">Data Rule</span>
-          </a>
-        </li>
-
-             <li class="nav-item">
-            <a class="nav-link" href="perangkingan">
-              <i class="mdi mdi-chart-timeline menu-icon"></i>
-              <span class="menu-title">Perangkingan</span>
-            </a>
-          </li>
-       
-        </ul>
-      </nav>
-      <!-- partial -->
+             <a class="nav-link" href="datapengguna">
+               <i class="mdi mdi-account menu-icon"></i>
+               <span class="menu-title">Data Pengguna</span>
+             </a>
+           </li>
+           
+        <li class="nav-item">
+             <a class="nav-link" href="datasekolah">
+               <i class="mdi mdi-file-document-box-outline menu-icon"></i>
+               <span class="menu-title">Data Sekolah</span>
+             </a>
+ 
+ 
+           </li><li class="nav-item">
+             <a class="nav-link" href="datakriteria">
+               <i class="mdi mdi-grid-large menu-icon"></i>
+               <span class="menu-title">Data Kriteria</span>
+             </a>
+           </li>
+ 
+ 
+         </li><li class="nav-item">
+           <a class="nav-link" href="datarule">
+             <i class="mdi mdi-help-network menu-icon"></i>
+             <span class="menu-title">Data Rule</span>
+           </a>
+         </li>
+ 
+              <li class="nav-item active">
+             <a class="nav-link" href="perangkingan">
+               <i class="mdi mdi-chart-timeline menu-icon"></i>
+               <span class="menu-title">Perangkingan</span>
+             </a>
+           </li>
+        
+         </ul>
+       </nav>
+       {%elif role=="user"%}
+       <nav class="sidebar sidebar-offcanvas" id="sidebar">
+         <ul class="nav">
+           <li class="nav-item">
+             <a class="nav-link" href="/">
+               <i class="mdi mdi-home menu-icon"></i>
+               <span class="menu-title">Dashboard</span>
+             </a>
+           </li>
+ 
+           
+        <li class="nav-item">
+             <a class="nav-link" href="datasekolah">
+               <i class="mdi mdi-file-document-box-outline menu-icon"></i>
+               <span class="menu-title">Data Sekolah</span>
+             </a>
+ 
+ 
+ 
+              <li class="nav-item active">
+             <a class="nav-link" href="perangkingan">
+               <i class="mdi mdi-chart-timeline menu-icon"></i>
+               <span class="menu-title">Perangkingan</span>
+             </a>
+           </li>
+        
+         </ul>
+       </nav>
+       {%endif%}
+       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
           
@@ -132,6 +166,12 @@
                         Proses Perangkingan
                       </button>   
                     </form> 
+                    <h3 style="margin-top:35px;margin-bottom:20px">Konversi :</h3>
+                    <table id="tableConverted"></table>
+                    <h3 style="margin-top:35px;margin-bottom:20px">Normalisasi :</h3>
+                    <table id="tableNormalisasi"></table>
+                    <h3 style="margin-top:35px;margin-bottom:20px">Prefensi & Perangkingan :</h3>
+                    <table id="tablePrefensi"></table>
                 </div>
               </div>
             </div>
@@ -253,13 +293,13 @@
   kriteria.forEach((element)=>{
       let key = element[1];
       sekolah.forEach((itemsekolah,index)=>{
-            converted.push(itemsekolah);
+            converted.push({...itemsekolah});
             let isruleExist = rule.filter((itemrule)=>{return itemrule[4]===key});
             let truevalue = 0;
             if(isruleExist.length>0){
                isruleExist.forEach((itemrule)=>{
                     let usedRule = itemrule[2];
-                    if(eval(`${itemsekolah[key]}${usedRule}`)){
+                    if(eval(`${(isNaN(itemsekolah[key]) ? `'${itemsekolah[key]}'`:itemsekolah[key])}${usedRule}`)){
                         truevalue = itemrule[3];
                     }
                })
@@ -270,71 +310,147 @@
             converted[index][key]=truevalue;
       })
   })
-  console.log(converted.filter((el,index)=>index<sekolah.length));
+  converted = converted.filter((el,index)=>index<sekolah.length);
 
-//     let data = {{data|safe}}
-//     $('#table').bootstrapTable({
-//       search:true,
-//       pagination:true,
-//       height:500,
-//   columns: [{
-//     field: 'id_rule',
-//     title: 'ID Rule'
-//   }, {
-//     field: 'id_kriteria',
-//     title: 'ID Kriteria'
-//   }, {
-//     field: 'nama_kriteria',
-//     title: 'Nama Kriteria'
-//   },
-//   {
-//     field: 'rule',
-//     title: 'Rule'
-//   },
-//   {
-//     field: 'nilai',
-//     title: 'Nilai'
-//   },
-//   {
-//     field: 'aksi',
-//     title: 'Aksi',
-//     formatter:(_,value, i)=>{
-//         return `
-//         <div style="flex-direction:row;display:flex">
-//           <form>
-//             <button id="btnUbahRule" data-id="${value.id_rule}" data-index="${i}" type="button" class="btn btn-primary">Ubah</button>
-//           </form>
-//           <form action="" method="POST">
-//             <input type="hidden" name="_method" value="DELETE" /> 
-//             <input type="hidden" name="id" value="${value.id_rule}" /> 
-//             <button type="submit" class="btn btn-danger">Hapus</button>
-//           </form>
-//         </div>  
-//         `
-        
-//     }
-//   }],
-//   data: data
-// })
-  </script>
-   <script>
-    // $(document).on("click","#btnUbahRule",(e)=>{
-    //   $("#ubahruleModal").modal();
+  let min_ = {}
+  let max_ = {}
+  
+  // PROSES MENCARI MIN DAN MAX DARI SELURUH COLUMN
+  kriteria.forEach((kr, index)=>{
+        let kriteria = kr[1]
+        let max=0;
+        let min=null;
+        if(sekolah.length>0){
+          min=sekolah[0][kriteria];
+        }
+        else{
+          min=0;
+        }
+        converted.forEach((itemsekolah,index)=>{
+            if(itemsekolah[kriteria]>max){
+              max=itemsekolah[kriteria];
+            }
+        })
+        converted.forEach((itemsekolah,index)=>{
+            if(itemsekolah[kriteria]<min){
+              min=itemsekolah[kriteria];
+            }
+        })
+        max_[kriteria]=max;
+        min_[kriteria]=min;
+  })
+  
 
-    //   let id_rule = data[e.currentTarget.getAttribute("data-index")].id_rule;
-    //   let id_kriteria = data[e.currentTarget.getAttribute("data-index")].id_kriteria;
-    //   let nama_kriteria = data[e.currentTarget.getAttribute("data-index")].nama_kriteria;
-    //   let rule = data[e.currentTarget.getAttribute("data-index")].rule;
-    //   let nilai = data[e.currentTarget.getAttribute("data-index")].nilai;
+///// PROSES NORMALISASI
+let normalized = [];
+kriteria.forEach((kr,index)=>{
+    let kriteria = kr[1]
+    let tipe = kr[2]
+    converted.forEach((itemsekolah,index)=>{
+        normalized.push({...itemsekolah});
+        let hasil = 0;
+        if(tipe==="benefit"){
+            hasil = itemsekolah[kriteria]/max_[kriteria];
+            hasil = (isNaN(hasil)) ? 0:hasil;
+        }
+        else if(tipe==="cost"){
+            hasil = min_[kriteria]/itemsekolah[kriteria];
+            hasil = (isNaN(hasil)) ? 0:hasil;
+        }
+        normalized[index][kriteria]=hasil;
+    })
+})
 
-    //   document.querySelector("#readonlyDataRule").value=e.currentTarget.getAttribute("data-id");
-      
-    //   document.querySelector("#putNamaKriteria").value = nama_kriteria;
-    //   document.querySelector("#putRule").value = rule;
-    //   document.querySelector("#putNilai").value = nilai;
-   
-         
-    // })
+normalized = normalized.filter((el,index)=>index<sekolah.length);
+
+let prefensied = JSON.parse(JSON.stringify(normalized));
+
+//PROSES MENCARI PREFENSI
+
+normalized.forEach((normal,index)=>{
+   let prefensi = 0;
+   kriteria.forEach((kr,index)=>{
+     let kriteria = kr[1];
+     let bobot = kr[3];
+     prefensi = prefensi + (bobot*normal[kriteria]);
+   })
+   prefensied[index]["prefensi"]=prefensi;
+})
+
+
+let prefensied_sorted = JSON.parse(JSON.stringify(prefensied));
+prefensied_sorted = prefensied_sorted.sort((a,b)=>{
+  return b.prefensi-a.prefensi;
+})
+
+prefensied.forEach((pf,index)=>{
+    let ranking = -1;
+    prefensied_sorted.forEach((sorted,index)=>{
+        if(pf["Nama Sekolah"]===sorted["Nama Sekolah"]){
+            ranking = index+1;
+        }
+    })
+    pf["ranking"] = ranking;
+})
+
+
+
+///////////////////////////////////////
+
+let columns = kriteria.map((el,i)=>{
+  return {
+    field:el[1],
+    title:el[1]
+  }
+})
+
+$('#tableConverted').bootstrapTable({
+      pagination:true,
+      height:500,
+  columns: [{
+    "field":"Nama Sekolah",
+    "title":"Nama Sekolah"
+  },...columns
+  ],
+  data: converted
+})
+
+$('#tableNormalisasi').bootstrapTable({
+      pagination:true,
+      height:500,
+  columns: [{
+    "field":"Nama Sekolah",
+    "title":"Nama Sekolah"
+  },...columns
+  ],
+  data: normalized
+})
+
+
+$('#tablePrefensi').bootstrapTable({
+      pagination:true,
+      height:500,
+      sortable:true,
+  columns: [{
+    "field":"Nama Sekolah",
+    "title":"Nama Sekolah",
+    "sortable":true}
+  ,{
+    "field":"prefensi",
+    "title":"Prefensi",
+    "sortable":true
+  },
+  {
+    "field":"ranking",
+    "title":"Ranking",
+    "sortable":true
+  }],
+  data: prefensied
+})
+
+
+
+
 </script>
   <!-- End plugin js for this page-->
   <!-- inject:js -->
