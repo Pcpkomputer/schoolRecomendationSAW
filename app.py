@@ -98,8 +98,7 @@ def datapengguna():
             cursor.execute("SELECT * FROM pengguna WHERE email=%s",(email,));
             emailExist = cursor.fetchall()
 
-            print(emailExist)
-            if emailExist != None:
+            if emailExist == None:
                 return "Email sudah dipakai..."
             cursor.execute("INSERT INTO pengguna VALUES (NULL,%s,%s,%s,%s)",(nama,email,password,role))
             mydb.commit()
