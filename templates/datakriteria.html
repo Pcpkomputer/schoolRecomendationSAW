@@ -22,7 +22,7 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="navbar-brand-wrapper d-flex justify-content-center">
-        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
+        <div style="margin-left:15px" class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
           <a style="font-size:1em" class="navbar-brand brand-logo" href="index.html">Rekomendasi Sekolah SAW
 </a>
           <a class="navbar-brand brand-logo-mini" style="font-size:13px" href="index.html">SAW</a>
@@ -314,7 +314,7 @@
         return `
         <div style="display:flex;flex-direction:row">
         <form>
-          <button id="btnUbahKriteria" data-index="${i}" data-id="${value.id}" type="button" class="btn btn-primary">Ubah</button>
+          <button id="btnUbahKriteria" data-index="${value.id}" data-id="${value.id}" type="button" class="btn btn-primary">Ubah</button>
         </form>
         <form action="" method="POST">
           <input type="hidden" name="_method" value="DELETE" /> 
@@ -332,15 +332,20 @@
     $(document).on("click","#btnUbahKriteria",(e)=>{
        $("#ubahkriteriaModal").modal();
 
+       let value = data.filter((item,_)=>{
+          return item.id===parseInt(e.currentTarget.getAttribute("data-index")); 
+        });
+
+        value = value[0];
        
-      let id = data[e.currentTarget.getAttribute("data-index")].id;
-      let nama = data[e.currentTarget.getAttribute("data-index")].nama;
-      let tipe = data[e.currentTarget.getAttribute("data-index")].tipe;
-      let bobot = data[e.currentTarget.getAttribute("data-index")].bobot;
+      let id = value.id;
+      let nama = value.nama;
+      let tipe = value.tipe;
+      let bobot = value.bobot;
 
 
 
-      document.querySelector("#readonlyDataKriteria").value=e.currentTarget.getAttribute("data-id");
+      document.querySelector("#readonlyDataKriteria").value=id;
       
       document.querySelector("#putNama").value = nama;
       document.querySelector("#putTipe").value = tipe;

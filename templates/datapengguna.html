@@ -22,7 +22,7 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="navbar-brand-wrapper d-flex justify-content-center">
-        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
+        <div style="margin-left:15px" class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
           <a style="font-size:1em" class="navbar-brand brand-logo" href="index.html">Rekomendasi Sekolah SAW
 </a>
           <a class="navbar-brand brand-logo-mini" style="font-size:13px" href="index.html">SAW</a>
@@ -287,7 +287,7 @@
         return `
         <div style="flex-direction:row;display:flex">
         <form>
-        <button id="btnUbahPengguna" data-index="${i}" data-id="${value.id}" type="button" class="btn btn-primary">Ubah</button>
+        <button id="btnUbahPengguna" data-index="${value.id}" data-id="${value.id}" type="button" class="btn btn-primary">Ubah</button>
         </form>
         <form action="" method="POST">
         <input type="hidden" name="_method" value="DELETE" /> 
@@ -304,13 +304,19 @@
       $(document).on("click","#btnUbahPengguna",(e)=>{
          $("#ubahpenggunaModal").modal();
 
-        let id = data[e.currentTarget.getAttribute("data-index")].id;
-        let nama = data[e.currentTarget.getAttribute("data-index")].nama;
-        let email = data[e.currentTarget.getAttribute("data-index")].email;
-        let password = data[e.currentTarget.getAttribute("data-index")].password;
-        let role = data[e.currentTarget.getAttribute("data-index")].role;
+         let value = data.filter((item,_)=>{
+          return item.id===parseInt(e.currentTarget.getAttribute("data-index")); 
+        });
 
-         document.querySelector("#readonlyDataPengguna").value=e.currentTarget.getAttribute("data-id");
+        value = value[0];
+
+        let id = value.id;
+        let nama = value.nama;
+        let email = value.email;
+        let password = value.password;
+        let role = value.role;
+
+         document.querySelector("#readonlyDataPengguna").value=id;
          
          document.querySelector("#putNama").value = nama;
          document.querySelector("#putemail").value = email;

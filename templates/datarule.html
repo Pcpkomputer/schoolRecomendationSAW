@@ -22,7 +22,7 @@
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="navbar-brand-wrapper d-flex justify-content-center">
-        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
+        <div  style="margin-left:15px" class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
           <a style="font-size:1em" class="navbar-brand brand-logo" href="index.html">Rekomendasi Sekolah SAW
 </a>
           <a class="navbar-brand brand-logo-mini" style="font-size:13px" href="index.html">SAW</a>
@@ -292,13 +292,19 @@
     $(document).on("click","#btnUbahRule",(e)=>{
       $("#ubahruleModal").modal();
 
-      let id_rule = data[e.currentTarget.getAttribute("data-index")].id_rule;
-      let id_kriteria = data[e.currentTarget.getAttribute("data-index")].id_kriteria;
-      let nama_kriteria = data[e.currentTarget.getAttribute("data-index")].nama_kriteria;
-      let rule = data[e.currentTarget.getAttribute("data-index")].rule;
-      let nilai = data[e.currentTarget.getAttribute("data-index")].nilai;
+      let value = data.filter((item,_)=>{
+          return item.id_rule===e.currentTarget.getAttribute("data-id"); 
+        });
 
-      document.querySelector("#readonlyDataRule").value=e.currentTarget.getAttribute("data-id");
+      value = value[0];
+
+      let id_rule = value.id_rule;
+      let id_kriteria = value.id_kriteria;
+      let nama_kriteria = value.nama_kriteria;
+      let rule = value.rule;
+      let nilai = value.nilai;
+
+      document.querySelector("#readonlyDataRule").value=id_rule;
       
       document.querySelector("#putNamaKriteria").value = nama_kriteria;
       document.querySelector("#putRule").value = rule;
